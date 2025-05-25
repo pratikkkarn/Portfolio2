@@ -7,24 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pratik Kumar - Portfolio</title>
 
-  <!-- Favicon -->
   <link rel="shortcut icon" href="favi.png" type="image/x-icon">
 
-  <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
-        crossorigin="anonymous" 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous"
         referrerpolicy="no-referrer" />
 
-  <!-- Ion Icons -->
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </head>
@@ -33,7 +28,6 @@
 
   <main>
 
-    <!-- #SIDEBAR -->
     <aside class="sidebar" data-sidebar>
 
       <div class="sidebar-info">
@@ -138,55 +132,52 @@
 
     </aside>
 
-    <!-- #main-content -->
     <div class="main-content">
 
-      <!-- #NAVBAR -->
       <nav class="navbar">
 
         <ul class="navbar-list">
 
           <li class="navbar-item">
-            <button class="navbar-link active" data-nav-link>About</button>
+            <button class="navbar-link active" data-nav-link data-page-name="about">About</button>
           </li>
 
           <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Resume</button>
+            <button class="navbar-link" data-nav-link data-page-name="resume">Resume</button>
           </li>
 
           <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Portfolio</button>
+            <button class="navbar-link" data-nav-link data-page-name="portfolio">Portfolio</button>
           </li>
 
           <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Contact</button>
+            <button class="navbar-link" data-nav-link data-page-name="contact">Contact</button>
           </li>
 
         </ul>
 
       </nav>
 
-      <!-- #ABOUT -->
       <article class="about active" data-page="about">
 
         <header>
-           <h2 class="h2 article-title" id="typewriter">About Me</h2>
+           <h2 class="h2 article-title" id="typewriter-about">About Me</h2>
+
         </header>
 
         <section class="about-text">
           <p>
-            Hello! I'm Pratik, a passionate developer with 1+ years of experience creating beautiful, functional websites and applications. 
+            Hello! I'm Pratik, a passionate developer with 1+ years of experience creating beautiful, functional websites and applications.
             I specialize in modern web technologies like React, Node.js, and responsive design principles.
           </p>
 
           <p>
             My job is to build your website so that it is functional and user-friendly but at the same time attractive.
-            I add personal touch to your product and make sure that is eye-catching and easy to use. When I'm not coding, 
+            I add personal touch to your product and make sure that is eye-catching and easy to use. When I'm not coding,
             you can find me making music in my room or experimenting with new photography techniques.
           </p>
         </section>
 
-        <!-- service -->
         <section class="service">
 
           <h3 class="h3 service-title">What I'm doing</h3>
@@ -257,29 +248,12 @@
 
         </section>
 
-        <!-- Testimonials (commented out as we don't have real testimonials yet) -->
-        <!--
-        <section class="testimonials">
-          <h3 class="h3 testimonials-title">Testimonials</h3>
-          <p>Coming soon...</p>
-        </section>
-        -->
+        </article>
 
-        <!-- Clients (commented out as we don't have real clients yet) -->
-        <!--
-        <section class="clients">
-          <h3 class="h3 clients-title">Clients</h3>
-          <p>Coming soon...</p>
-        </section>
-        -->
-
-      </article>
-
-      <!-- #RESUME -->
       <article class="resume" data-page="resume">
 
         <header>
-          <h2 class="h2 article-title" id="typewriter-resume">Resume</h2>
+          <h2 class="h2 article-title" id="typewriter-resume" data-text="Resume">Resume</h2>
 
         </header>
 
@@ -364,7 +338,7 @@ Built a strong academic foundation from Class 1 to 10.
                 <data value="95">95%</data>
               </div>
               <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 95%;"></div>
+                <div class="skill-progress-fill"></div>
               </div>
             </li>
 
@@ -374,7 +348,7 @@ Built a strong academic foundation from Class 1 to 10.
                 <data value="85">85%</data>
               </div>
               <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 85%;"></div>
+                <div class="skill-progress-fill"></div>
               </div>
             </li>
 
@@ -384,7 +358,7 @@ Built a strong academic foundation from Class 1 to 10.
                 <data value="80">80%</data>
               </div>
               <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 80%;"></div>
+                <div class="skill-progress-fill"></div>
               </div>
             </li>
 
@@ -394,7 +368,7 @@ Built a strong academic foundation from Class 1 to 10.
                 <data value="75">75%</data>
               </div>
               <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 75%;"></div>
+                <div class="skill-progress-fill"></div>
               </div>
             </li>
 
@@ -404,7 +378,7 @@ Built a strong academic foundation from Class 1 to 10.
                 <data value="70">70%</data>
               </div>
               <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 70%;"></div>
+                <div class="skill-progress-fill"></div>
               </div>
             </li>
 
@@ -414,7 +388,7 @@ Built a strong academic foundation from Class 1 to 10.
                 <data value="85">85%</data>
               </div>
               <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 85%;"></div>
+                <div class="skill-progress-fill"></div>
               </div>
             </li>
 
@@ -424,11 +398,10 @@ Built a strong academic foundation from Class 1 to 10.
 
       </article>
 
-      <!-- #PORTFOLIO -->
       <article class="portfolio" data-page="portfolio">
 
         <header>
-          <h2 class="h2 article-title" id="typewriter-portfolio">Portfolio</h2>
+          <h2 class="h2 article-title" id="typewriter-portfolio" data-text="Portfolio">Portfolio</h2>
         </header>
 
         <section class="projects">
@@ -526,11 +499,10 @@ Built a strong academic foundation from Class 1 to 10.
 
       </article>
 
-      <!-- #CONTACT -->
       <article class="contact" data-page="contact">
 
         <header>
-          <h2 class="h2 article-title" id="typewriter-contact">Contact</h2>
+          <h2 class="h2 article-title" id="typewriter-contact" data-text="Contact">Contact</h2>
         </header>
 
         <section class="mapbox" data-mapbox>
@@ -567,68 +539,14 @@ Built a strong academic foundation from Class 1 to 10.
       </article>
 
     </div>
-    
+
 
   </main>
 
-  <!-- Custom JS -->
   <script src="script.js"></script>
 
-  <!-- Form submission handling -->
-  <script>
-    // Simple form submission handler
-    const form = document.querySelector('[data-form]');
-    const formBtn = document.querySelector('[data-form-btn]');
-    
-    if (form) {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Get form values
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData);
-        
-        // Here you would typically send the data to a server
-        console.log('Form submitted:', data);
-        
-        // Show success message
-        alert('Thank you for your message! I will get back to you soon.');
-        form.reset();
-      });
-      
-      // Enable submit button (remove disabled attribute)
-      formBtn.removeAttribute('disabled');
-    }
-    
-    // Update copyright year
-    document.addEventListener('DOMContentLoaded', function() {
-      const yearElement = document.querySelector('#current-year');
-      if (yearElement) {
-        yearElement.textContent = new Date().getFullYear();
-      }
-
-      
-    });
-  </script>
-
-
-<footer style="text-align: center; padding: 20px;">
-  <p style="margin: 0; font-size: 14px; font-weight: 400;">
-    <span style="
-      background-image: linear-gradient(90deg, #d2c7c4, #d2c7c4);
-      color: transparent;
-      background-clip: text;
-      display: inline;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;">
-     <strong style="font-weight: 800;">&copy;</strong> 2025 <p><strong style="font-weight: 700;">Pratik Kumar</strong>. All rights reserved.</span></p></span>
-  </p>
-</footer>
-
-<!-- Image Modal (place this just before </body>) -->
-<div id="imgModal" class="modal">
-  <span class="close">&times;</span>
+  <div id="imgModal" class="modal">
+  <span class="close">×</span>
   <img class="modal-content" id="modalImg">
 </div>
 
@@ -656,8 +574,19 @@ Built a strong academic foundation from Class 1 to 10.
   }
 </script>
 
-
-
+<footer style="text-align: center; padding: 20px;">
+  <p style="margin: 0; font-size: 14px; font-weight: 400;">
+    <span style="
+      background-image: linear-gradient(90deg, #d2c7c4, #d2c7c4);
+      color: transparent;
+      background-clip: text;
+      display: inline;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;">
+     <strong style="font-weight: 800;">©</strong> 2025 <p><strong style="font-weight: 700;">Pratik Kumar</strong>. All rights reserved.</span></p></span>
+  </p>
+</footer>
 
 </body>
 
