@@ -176,7 +176,8 @@ article {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+  transform: translateY(20px); /* Initial state for page transition */
+  transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out, transform 0.6s ease-in-out; /* Slower page transition */
   overflow-y: scroll;
 }
 
@@ -194,7 +195,53 @@ article.active {
   visibility: visible;
   pointer-events: all;
   position: relative;
-  animation: none;
+  transform: translateY(0); /* Final state for page transition */
+}
+
+/* Typewriter effect for article titles */
+.article-title {
+  position: relative;
+  padding-bottom: 7px;
+  font-weight: var(--fw-600);
+  font-size: var(--fs-1);
+  font-family: monospace, monospace; /* For typewriter effect */
+  box-sizing: border-box;
+  white-space: nowrap; /* Keep text on one line */
+  overflow: hidden;    /* Hide overflow for typing effect */
+  width: 0;            /* Start with 0 width */
+  display: inline-block; /* Essential for width-based typing */
+  vertical-align: bottom; /* Prevents line height jump with border */
+  color: var(--white-2); /* Ensure text color is visible */
+}
+
+.article-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 3px;
+  background: var(--text-gradient-primary);
+  border-radius: 3px;
+}
+
+/* Typewriter animation for article titles */
+article.active .article-title {
+  animation:
+    typewriter 0.8s steps(20, end) forwards, /* Adjust duration and steps for desired speed */
+    blink-cursor 0.75s step-end infinite;
+  max-width: 20ch; /* A general max-width in character units */
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: var(--max-ch-width, 100%); } /* Use a variable or 100% to fill container */
+}
+
+/* Blinking cursor animation (shared) */
+@keyframes blink-cursor {
+  from, to { border-right-color: transparent; }
+  50% { border-right-color: var(--accent-color); }
 }
 
 .h2, .h3, .h4, .h5 {
@@ -211,24 +258,6 @@ article.active {
 .h5 {
   font-size: var(--fs-7);
   font-weight: var(--fw-500);
-}
-
-.article-title {
-  position: relative;
-  padding-bottom: 7px;
-  font-weight: var(--fw-600);
-  font-size: var(--fs-1);
-}
-
-.article-title::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 30px;
-  height: 3px;
-  background: var(--text-gradient-primary);
-  border-radius: 3px;
 }
 
 .has-scrollbar::-webkit-scrollbar {
@@ -299,11 +328,25 @@ main {
 .sidebar {
   margin-bottom: 15px;
   max-height: 112px;
-  overflow: hidden;
+  overflow-y: hidden; /* Changed to hidden initially */
   transition: max-height var(--transition-2), box-shadow var(--transition-1);
 }
 
-.sidebar.active { max-height: 405px; }
+.sidebar.active {
+  max-height: 405px; /* Adjust this value if content is still cut off when open */
+  overflow-y: auto; /* Enable vertical scrolling when active */
+}
+
+/* Hidden scrollbar for the sidebar */
+.sidebar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
 
 .sidebar-info {
   position: relative;
@@ -349,7 +392,9 @@ main {
   font-family: var(--ff-poppins);
   text-align: center;
   margin: 0 auto;
-  border-bottom: 2px solid blue;
+  /* Applying the gradient to the bottom border */
+  border-bottom: 2px solid transparent; /* Fallback and to set width */
+  border-image: var(--text-gradient-primary) 1; /* Apply the gradient */
   padding-bottom: 0.01em;
   box-sizing: border-box;
 }
@@ -359,10 +404,7 @@ main {
   to { width: 13ch }
 }
 
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: var(--accent-color) }
-}
+/* Existing blink-caret keyframes are fine, no need to duplicate */
 
 .info-content .title {
   color: var(--white-1);
@@ -555,33 +597,6 @@ main {
 
 .about-text p { margin-bottom: 15px; }
 
-#typewriter {
-  border-right: 2px solid black;
-  white-space: nowrap;
-  overflow: hidden;
-  font-family: monospace, monospace;
-  font-weight: 600;
-  font-size: 2rem;
-  width: 0;
-  max-width: 100%;
-  box-sizing: border-box;
-  animation: typing-about-me 3s steps(8, end) forwards, blinkCursor 0.7s step-end infinite;
-}
-
-@keyframes typing-about-me {
-  from { width: 0; }
-  to { width: 8ch; }
-}
-
-/**
- * The `blinkCursor` animation controls the blinking effect of the cursor.
- * The `border-color` is set to `transparent` at 0% and 100% to hide the cursor,
- * and to `var(--accent-color)` at 50% to show it with the defined accent gradient.
- */
-@keyframes blinkCursor {
-  0%, 100% { border-color: transparent; }
-  50% { border-color: var(--accent-color); } /* Changed to use accent color variable for gradient effect */
-}
 
 /**
  * #service
@@ -603,7 +618,13 @@ main {
   border-radius: 14px;
   box-shadow: var(--shadow-2);
   z-index: 1;
+  opacity: 0; /* Initial state for animation */
+  transform: translateY(20px); /* Initial state for animation */
   transition: transform var(--transition-1), box-shadow var(--transition-1);
+}
+
+.service-item.fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards; /* Slower animation */
 }
 
 .service-item::before {
@@ -672,8 +693,15 @@ main {
   border: 1px solid var(--jet);
   border-radius: 14px;
   box-shadow: var(--shadow-2);
+  opacity: 0; /* Initial state for animation */
+  transform: translateY(20px); /* Initial state for animation */
   transition: transform var(--transition-1), box-shadow var(--transition-1);
 }
+
+.testimonials-item.fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards; /* Slower animation */
+}
+
 
 .testimonials-item:hover {
   transform: translateY(-5px);
@@ -855,8 +883,15 @@ main {
   border: 1px solid var(--jet);
   border-radius: 14px;
   box-shadow: var(--shadow-1);
+  opacity: 0; /* Initial state for animation */
+  transform: scale(0.8); /* Initial state for animation */
   transition: transform var(--transition-1), box-shadow var(--transition-1);
 }
+
+.clients-item.scale-in {
+  animation: scale-in 0.6s ease-out forwards; /* Slower animation */
+}
+
 
 .clients-item:hover {
   transform: translateY(-5px);
@@ -896,7 +931,16 @@ main {
   margin-left: 45px;
 }
 
-.timeline-item { position: relative; }
+.timeline-item {
+  position: relative;
+  opacity: 0; /* Initial state for animation */
+  transform: translateY(20px); /* Initial state for animation */
+}
+
+.timeline-item.fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards; /* Slower animation */
+}
+
 
 .timeline-item:not(:last-child) { margin-bottom: 20px; }
 
@@ -976,7 +1020,8 @@ main {
   background: var(--text-gradient-primary);
   height: 100%;
   border-radius: inherit;
-  transition: width 1s ease-out;
+  width: 0%; /* Start at 0% for animation */
+  transition: width 1.8s cubic-bezier(0.25, 0.8, 0.25, 1); /* Even slower, smoother transition */
 }
 
 /*-----------------------------------*\
@@ -996,10 +1041,10 @@ main {
   max-width: 300px; /* Max width for larger mobile devices */
   position: relative; /* For dropdown positioning */
   cursor: pointer; /* Indicate it's clickable */
-  background: var(--bg-gradient-card); /* Consistent background */
-  border: 1px solid var(--jet); /* Consistent border */
-  border-radius: 14px; /* Rounded corners */
-  box-shadow: var(--shadow-2); /* Subtle shadow */
+  background: var(--bg-gradient-card);
+  border: 1px solid var(--jet);
+  border-radius: 14px;
+  box-shadow: var(--shadow-2);
   transition: box-shadow var(--transition-1);
 }
 
@@ -1099,17 +1144,47 @@ main {
   margin-bottom: 10px;
 }
 
-.project-item { display: none; }
+.project-item {
+  display: none;
+  opacity: 0; /* Initial state for animation */
+  transform: translateY(20px); /* Initial state for animation */
+}
 
 .project-item.active {
   display: block;
-  animation: scaleUp 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  animation: fade-in-up 0.8s ease-out forwards; /* Apply fade-in-up to project items, slower */
 }
 
-@keyframes scaleUp {
+
+@keyframes scaleUp { /* This is for portfolio items, keep it */
   0% { transform: scale(0.8); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
+
+/* General fade-in-up animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* General scale-in animation */
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 
 .project-item > a {
   width: 100%;
@@ -1220,12 +1295,13 @@ main {
   box-shadow: var(--shadow-2);
   border-radius: 16px;
   z-index: 1;
+  opacity: 0; /* Initial state for animation */
+  transform: translateY(20px); /* Initial state for animation */
   transition: transform var(--transition-1), box-shadow var(--transition-1);
 }
 
-.blog-post-item > a:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-3);
+.blog-post-item > a.fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards; /* Slower animation */
 }
 
 .blog-post-item > a::before {
@@ -1383,23 +1459,16 @@ textarea.form-input::-webkit-resizer { display: none; }
   box-shadow: var(--shadow-3);
   z-index: 1;
   transition: var(--transition-1);
-  overflow: hidden;
 }
 
 .form-btn::before {
   content: "";
   position: absolute;
   inset: 1px;
-  background: var(--eerie-black-2);
   border-radius: inherit;
-  z-index: -1;
+  background: var(--bg-gradient-dark);
   transition: var(--transition-1);
-}
-
-.form-btn ion-icon {
-  font-size: 16px;
-  color: var(--white-2);
-  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  z-index: -1;
 }
 
 .form-btn:hover {
@@ -1484,7 +1553,7 @@ textarea.form-input::-webkit-resizer { display: none; }
 }
 
 .info-content .title {
-  padding: 3px 5px; /* reduced padding */
+  padding: 3px 2px; /* reduced padding */
 }
 
 .info_more-btn {
@@ -1747,15 +1816,11 @@ textarea.form-input::-webkit-resizer { display: none; }
   .timeline-text { max-width: 700px; }
 }
 
-@keyframes blinkCursor {
-  0%, 100% { border-color: transparent; }
-  50% { border-color: var(--accent-color); } /* Updated to use accent color variable */
-}
-
-
 
 
 @media (max-width: 450px) {
+  /* Styles specific for very small screens (phones) */
+
   .sidebar-info {
     flex-direction: row;
     align-items: flex-start;
@@ -1786,6 +1851,39 @@ textarea.form-input::-webkit-resizer { display: none; }
     padding: 2px 8px;
     margin-bottom: 0;
     text-align: left;
+    /* Allow text to wrap within the available width */
+    white-space: normal; /* Override any nowrap from general styles */
+    width: 100%; /* Ensure it takes full available width for wrapping */
+    margin-top: 5px; /* Added to move the title down a bit */
+  }
+
+  /*
+   * Sidebar scrollbar and full expansion for small screens
+   * This ensures the sidebar can fully open and scroll if content exceeds height.
+   */
+  .sidebar.active {
+    max-height: 100vh; /* Allow it to expand to full viewport height */
+    overflow-y: auto;  /* Enable vertical scrolling when active */
+  }
+
+  /* Hidden scrollbar for the sidebar on small screens */
+  .sidebar::-webkit-scrollbar {
+    width: 0; /* For vertical scrollbar */
+    height: 0; /* For horizontal scrollbar (if any) */
+    background: transparent;
+  }
+  .sidebar::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+
+  /* Animation for the info_more-btn (the "icon-inner" button) */
+  .sidebar.active .info_more-btn {
+    animation: bounce-vertical 0.8s ease-in-out infinite alternate; /* Apply the animation */
+  }
+
+  @keyframes bounce-vertical {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); } /* Adjust bounce height as needed */
   }
 }
 
@@ -1833,64 +1931,4 @@ textarea.form-input::-webkit-resizer { display: none; }
   footer {
     margin-bottom: 60px; /* You can adjust this value to move it up */
   }
-}
-
-
-
-
-/* For About Me */
-#typewriter {
-  animation: typing-about-me 3s steps(8, end) forwards, blinkCursor 0.7s step-end infinite;
-}
-@keyframes typing-about-me {
-  from { width: 0; }
-  to { width: 8ch; }
-}
-
-/* For Resume */
-#typewriter-resume {
-  animation: typing-resume 3s steps(6, end) forwards, blinkCursor 0.7s step-end infinite;
-}
-@keyframes typing-resume {
-  from { width: 0; }
-  to { width: 6ch; }
-}
-
-/* For Portfolio */
-#typewriter-portfolio {
-  animation: typing-portfolio 3s steps(9, end) forwards, blinkCursor 0.7s step-end infinite;
-}
-@keyframes typing-portfolio {
-  from { width: 0; }
-  to { width: 9ch; }
-}
-
-/* For Contact */
-#typewriter-contact {
-  animation: typing-contact 3s steps(7, end) forwards, blinkCursor 0.7s step-end infinite;
-}
-@keyframes typing-contact {
-  from { width: 0; }
-  to { width: 7ch; }
-}
-
-/* Common styles for all typewriter headings */
-#typewriter,
-#typewriter-resume,
-#typewriter-portfolio,
-#typewriter-contact {
-  border-right: 2px solid black; /* This creates the blinking cursor line */
-  white-space: nowrap;
-  overflow: hidden;
-  font-family: monospace, monospace;
-  font-weight: 600;
-  font-size: 2rem; /* Or whatever size you prefer for h2 */
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-/* Blinking cursor animation (can be shared) */
-@keyframes blinkCursor {
-  0%, 100% { border-color: transparent; }
-  50% { border-color: var(--accent-color); }
 }
