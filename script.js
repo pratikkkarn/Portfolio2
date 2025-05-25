@@ -2,7 +2,7 @@
 
 // element toggle function
 const elementToggleFunc = function (elem) {
-  elem.classList.toggle("active");
+    elem.classList.toggle("active");
 }
 
 // sidebar variables
@@ -11,9 +11,9 @@ const sidebarBtn = document.querySelector("[data-sidebar-btn]");
 
 // sidebar toggle functionality for mobile
 if (sidebar && sidebarBtn) {
-  sidebarBtn.addEventListener("click", function () {
-    elementToggleFunc(sidebar);
-  });
+    sidebarBtn.addEventListener("click", function () {
+        elementToggleFunc(sidebar);
+    });
 }
 
 // testimonials variables (only if modal elements exist)
@@ -24,32 +24,32 @@ const overlay = document.querySelector("[data-overlay]");
 
 // Check if modal elements exist before proceeding with testimonials logic
 if (modalContainer && modalCloseBtn && overlay) {
-  const modalImg = document.querySelector("[data-modal-img]");
-  const modalTitle = document.querySelector("[data-modal-title]");
-  const modalText = document.querySelector("[data-modal-text]");
+    const modalImg = document.querySelector("[data-modal-img]");
+    const modalTitle = document.querySelector("[data-modal-title]");
+    const modalText = document.querySelector("[data-modal-text]");
 
-  // modal toggle function
-  const testimonialsModalFunc = function () {
-    modalContainer.classList.toggle("active");
-    overlay.classList.toggle("active");
-  }
+    // modal toggle function
+    const testimonialsModalFunc = function () {
+        modalContainer.classList.toggle("active");
+        overlay.classList.toggle("active");
+    }
 
-  // add click event to all modal items
-  for (let i = 0; i < testimonialsItem.length; i++) {
-    testimonialsItem[i].addEventListener("click", function () {
-      if (modalImg && modalTitle && modalText) {
-        modalImg.src = this.querySelector("[data-testimonials-avatar]").src;
-        modalImg.alt = this.querySelector("[data-testimonials-avatar]").alt;
-        modalTitle.innerHTML = this.querySelector("[data-testimonials-title]").innerHTML;
-        modalText.innerHTML = this.querySelector("[data-testimonials-text]").innerHTML;
-      }
-      testimonialsModalFunc();
-    });
-  }
+    // add click event to all modal items
+    for (let i = 0; i < testimonialsItem.length; i++) {
+        testimonialsItem[i].addEventListener("click", function () {
+            if (modalImg && modalTitle && modalText) {
+                modalImg.src = this.querySelector("[data-testimonials-avatar]").src;
+                modalImg.alt = this.querySelector("[data-testimonials-avatar]").alt;
+                modalTitle.innerHTML = this.querySelector("[data-testimonials-title]").innerHTML;
+                modalText.innerHTML = this.querySelector("[data-testimonials-text]").innerHTML;
+            }
+            testimonialsModalFunc();
+        });
+    }
 
-  // add click event to modal close button
-  modalCloseBtn.addEventListener("click", testimonialsModalFunc);
-  overlay.addEventListener("click", testimonialsModalFunc);
+    // add click event to modal close button
+    modalCloseBtn.addEventListener("click", testimonialsModalFunc);
+    overlay.addEventListener("click", testimonialsModalFunc);
 }
 
 
@@ -60,58 +60,67 @@ const selectValue = document.querySelector("[data-selecct-value]");
 const filterBtn = document.querySelectorAll("[data-filter-btn]");
 
 if (select) {
-  select.addEventListener("click", function () {
-    elementToggleFunc(this);
-  });
+    select.addEventListener("click", function () {
+        elementToggleFunc(this);
+    });
 }
 
 // add event in all select items
 for (let i = 0; i < selectItems.length; i++) {
-  selectItems[i].addEventListener("click", function () {
-    let selectedValue = this.innerText.toLowerCase();
-    if (selectValue) {
-      selectValue.innerText = this.innerText;
-    }
-    if (select) {
-      elementToggleFunc(select);
-    }
-    filterFunc(selectedValue);
-  });
+    selectItems[i].addEventListener("click", function () {
+        let selectedValue = this.innerText.toLowerCase();
+        if (selectValue) {
+            selectValue.innerText = this.innerText;
+        }
+        if (select) {
+            elementToggleFunc(select);
+        }
+        filterFunc(selectedValue);
+    });
 }
 
 // filter variables
 const filterItems = document.querySelectorAll("[data-filter-item]");
 
 const filterFunc = function (selectedValue) {
-  for (let i = 0; i < filterItems.length; i++) {
-    if (selectedValue === "all") {
-      filterItems[i].classList.add("active");
-    } else if (selectedValue === filterItems[i].dataset.category) {
-      filterItems[i].classList.add("active");
-    } else {
-      filterItems[i].classList.remove("active");
-    }
-  }
+    // First, remove active and animation classes from all
+    filterItems.forEach(item => {
+        item.classList.remove("active");
+        item.classList.remove('fade-in-up');
+        item.style.animationDelay = '';
+    });
+
+    let delay = 0;
+    filterItems.forEach(item => {
+        if (selectedValue === "all" || item.dataset.category === selectedValue) {
+            item.classList.add("active");
+            void item.offsetWidth; // Force reflow
+            setTimeout(() => {
+                item.classList.add('fade-in-up');
+                item.style.animationDelay = `${delay}ms`;
+            }, 10); // Small delay to ensure removal registers
+            delay += 120; // Slightly slower stagger for projects
+        }
+    });
 }
 
 // add event in all filter button items for large screen
-// Ensure filterBtn has elements before accessing filterBtn[0]
 let lastClickedBtn = filterBtn.length > 0 ? filterBtn[0] : null;
 
 for (let i = 0; i < filterBtn.length; i++) {
-  filterBtn[i].addEventListener("click", function () {
-    let selectedValue = this.innerText.toLowerCase();
-    if (selectValue) {
-      selectValue.innerText = this.innerText;
-    }
-    filterFunc(selectedValue);
+    filterBtn[i].addEventListener("click", function () {
+        let selectedValue = this.innerText.toLowerCase();
+        if (selectValue) {
+            selectValue.innerText = this.innerText;
+        }
+        filterFunc(selectedValue);
 
-    if (lastClickedBtn) {
-      lastClickedBtn.classList.remove("active");
-    }
-    this.classList.add("active");
-    lastClickedBtn = this;
-  });
+        if (lastClickedBtn) {
+            lastClickedBtn.classList.remove("active");
+        }
+        this.classList.add("active");
+        lastClickedBtn = this;
+    });
 }
 
 // contact form variables
@@ -121,129 +130,267 @@ const formBtn = document.querySelector("[data-form-btn]");
 
 // add event to all form input field
 for (let i = 0; i < formInputs.length; i++) {
-  formInputs[i].addEventListener("input", function () {
-    // check form validation
-    if (form && formBtn) { // Ensure form and formBtn exist
-      if (form.checkValidity()) {
-        formBtn.removeAttribute("disabled");
-      } else {
-        formBtn.setAttribute("disabled", "");
-      }
-    }
-  });
+    formInputs[i].addEventListener("input", function () {
+        // check form validation
+        if (form && formBtn) {
+            if (form.checkValidity()) {
+                formBtn.removeAttribute("disabled");
+            } else {
+                formBtn.setAttribute("disabled", "");
+            }
+        }
+    });
 }
 
 // page navigation variables
 const navigationLinks = document.querySelectorAll("[data-nav-link]");
 const pages = document.querySelectorAll("[data-page]");
+const skillProgressFills = document.querySelectorAll(".skill-progress-fill"); // Get all skill progress bars
+const articleTitles = document.querySelectorAll(".article-title"); // Get all article titles for typewriter effect
 
-// add event to all nav link
-for (let i = 0; i < navigationLinks.length; i++) {
-  navigationLinks[i].addEventListener("click", function () {
-    for (let j = 0; j < pages.length; j++) { // Changed inner loop variable to 'j'
-      if (this.innerHTML.toLowerCase() === pages[j].dataset.page) {
-        pages[j].classList.add("active");
-        navigationLinks[i].classList.add("active"); // Keep current nav link active
-        window.scrollTo(0, 0);
-      } else {
-        pages[j].classList.remove("active");
-        // Only remove active from other navigation links, not the one just clicked
-        if (navigationLinks[j] !== this) {
-          navigationLinks[j].classList.remove("active");
-        }
-      }
+// Elements for additional animations
+const serviceItems = document.querySelectorAll(".service-item");
+const timelineItems = document.querySelectorAll(".timeline-item");
+const clientItems = document.querySelectorAll(".clients-item"); // If you uncomment the clients section
+
+// Store original texts of h2 titles
+const originalTitles = new Map();
+articleTitles.forEach(title => {
+    originalTitles.set(title.id, title.textContent); // Store the original text
+});
+
+
+// Intersection Observer for skill bars
+let skillObserver; // Declare globally to manage lifecycle
+
+const initSkillObserver = () => {
+    // Disconnect existing observer if it's already observing
+    if (skillObserver) {
+        skillObserver.disconnect();
     }
-  });
+
+    const skillsSection = document.querySelector('.skill');
+    if (skillsSection) {
+        skillObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateSkillBars();
+                    observer.unobserve(entry.target); // Stop observing once animated
+                }
+            });
+        }, { threshold: 0.5 }); // Trigger when 50% of the section is visible
+
+        skillObserver.observe(skillsSection);
+    }
+};
+
+
+// Function to animate skill bars (called by Intersection Observer)
+const animateSkillBars = () => {
+    skillProgressFills.forEach((bar, index) => {
+        // Set width to 0 first to ensure the transition plays every time
+        bar.style.width = '0%';
+        // Force a reflow to make the browser render the 0% width before setting the final width
+        void bar.offsetWidth;
+        setTimeout(() => {
+            const value = bar.parentElement.previousElementSibling.querySelector('data').value;
+            bar.style.width = value + '%';
+        }, 200 * index + 100); // Slower, more staggered animation for each bar
+    });
+};
+
+// Reset skill bars (set to 0%)
+const resetSkillBars = () => {
+    if (skillObserver) {
+        skillObserver.disconnect(); // Disconnect observer when resetting
+    }
+    skillProgressFills.forEach(bar => {
+        bar.style.width = '0%';
+    });
+};
+
+// Function to start typewriter animation for a given element ID
+const startTypewriterAnimation = (elementId) => {
+    const typewriterElement = document.getElementById(elementId);
+    if (typewriterElement) {
+        const originalText = originalTitles.get(elementId); // Get original text from the map
+        if (!originalText) return; // Exit if no original text
+
+        typewriterElement.textContent = ''; // Clear current text to start typing
+        typewriterElement.classList.remove('typewriter-active'); // Remove class to reset animation and cursor
+
+        let charIndex = 0;
+        const typingSpeed = 80; // Adjust typing speed (ms per character, slower)
+
+        const typeChar = () => {
+            if (charIndex < originalText.length) {
+                typewriterElement.textContent += originalText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeChar, typingSpeed);
+            } else {
+                // Text is fully typed, now add the class to show the blinking cursor
+                typewriterElement.classList.add('typewriter-active');
+            }
+        };
+
+        setTimeout(typeChar, 100); // Small delay before starting typing characters
+    }
+};
+
+// Function to apply fade-in-up animation to a list of elements with staggered delay
+const applyStaggeredFadeInUp = (elements, baseDelay = 100) => {
+    elements.forEach((element, index) => {
+        element.classList.remove('fade-in-up'); // Ensure class is removed first
+        element.style.animationDelay = ''; // Clear previous delay
+        void element.offsetWidth; // Force reflow (important for re-triggering CSS animations)
+        setTimeout(() => {
+            element.classList.add('fade-in-up');
+            element.style.animationDelay = `${baseDelay * index}ms`; // Apply staggered delay
+        }, 10); // Very small delay to ensure removal registers before re-applying
+    });
+};
+
+// Function to apply scale-in animation to a list of elements with staggered delay
+const applyStaggeredScaleIn = (elements, baseDelay = 100) => {
+    elements.forEach((element, index) => {
+        element.classList.remove('scale-in'); // Ensure class is removed first
+        element.style.animationDelay = ''; // Clear previous delay
+        void element.offsetWidth; // Force reflow
+        setTimeout(() => {
+            element.classList.add('scale-in');
+            element.style.animationDelay = `${baseDelay * index}ms`; // Apply staggered delay
+        }, 10); // Very small delay
+    });
+};
+
+// Function to reset all dynamic animations and content on a page
+const resetAnimations = (pageElement) => {
+    // Reset all fade-in-up animations
+    pageElement.querySelectorAll('.fade-in-up').forEach(el => {
+        el.classList.remove('fade-in-up');
+        el.style.animationDelay = ''; // Clear inline delay
+    });
+    // Reset all scale-in animations
+    pageElement.querySelectorAll('.scale-in').forEach(el => {
+        el.classList.remove('scale-in');
+        el.style.animationDelay = ''; // Clear inline delay
+    });
+    // Reset typewriter titles
+    pageElement.querySelectorAll('.article-title').forEach(title => {
+        title.classList.remove('typewriter-active');
+        // Set text back to its original (full) form before typing
+        title.textContent = originalTitles.get(title.id) || '';
+    });
+    resetSkillBars(); // Always reset skill bars when page changes
+};
+
+
+// Add event to all nav link
+for (let i = 0; i < navigationLinks.length; i++) {
+    navigationLinks[i].addEventListener("click", function () {
+        const targetPageName = this.dataset.pageName;
+
+        // Deactivate all pages and reset their animations first
+        pages.forEach(page => {
+            page.classList.remove("active");
+            resetAnimations(page); // Fully reset animations on the old page
+        });
+        navigationLinks.forEach(link => link.classList.remove("active"));
+
+        // Activate the clicked page and its link
+        const activePage = document.querySelector(`[data-page="${targetPageName}"]`);
+        if (activePage) {
+            activePage.classList.add("active");
+            this.classList.add("active");
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Smooth scroll to top
+
+            // Start typewriter animation for the active page's title
+            const titleId = `typewriter-${targetPageName}`;
+            startTypewriterAnimation(titleId);
+
+            // Apply specific animations based on the active page
+            if (targetPageName === 'resume') {
+                // Skill bars will be animated by IntersectionObserver when scrolled into view
+                initSkillObserver(); // Initialize observer for resume page
+                applyStaggeredFadeInUp(timelineItems, 150); // Slower stagger for timeline
+            } else if (targetPageName === 'about') {
+                applyStaggeredFadeInUp(serviceItems, 150); // Slower stagger for services
+            } else if (targetPageName === 'portfolio') {
+                // For portfolio, apply to currently active project items (filtered or all)
+                applyStaggeredFadeInUp(document.querySelectorAll('.project-item.active'), 120); // Slower stagger for projects
+            }
+            // If you uncomment clients, add:
+            // else if (targetPageName === 'clients') {
+            //   applyStaggeredScaleIn(clientItems, 100);
+            // }
+        }
+    });
 }
 
-// Form submission handling (moved from inline script to here)
-if (form) {
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    // Get form values
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
-
-    console.log('Form submitted:', data);
-
-    // Use a custom message box instead of alert()
-    const messageBox = document.createElement('div');
-    messageBox.style.cssText = `
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #333;
-      color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-      text-align: center;
-      font-family: 'Poppins', sans-serif;
-    `;
-    messageBox.innerHTML = `
-      <p>Thank you for your message! I will get back to you soon.</p>
-      <button style="background-color: #007bff; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">OK</button>
-    `;
-    document.body.appendChild(messageBox);
-
-    messageBox.querySelector('button').addEventListener('click', () => {
-      document.body.removeChild(messageBox);
+// Initial setup on page load
+document.addEventListener("DOMContentLoaded", function() {
+    // Cache original texts for all h2 titles
+    articleTitles.forEach(title => {
+        originalTitles.set(title.id, title.textContent); // Store the original text
+        title.textContent = ''; // Clear content to prepare for typing effect
     });
 
-    form.reset();
-  });
+    // Trigger typewriter for the default active page ('about')
+    startTypewriterAnimation('typewriter-about');
+    applyStaggeredFadeInUp(serviceItems, 150); // Animate service items on initial load
 
-  // Enable submit button (remove disabled attribute)
-  if (formBtn) {
-    formBtn.removeAttribute('disabled');
-  }
+    // Ensure skill bars are initially at 0%
+    resetSkillBars(); // This will also disconnect any old observer
+});
+
+
+// Form submission handling
+if (form) {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+
+        console.log('Form submitted:', data);
+
+        const messageBox = document.createElement('div');
+        messageBox.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        `;
+        messageBox.innerHTML = `
+            <p>Thank you for your message! I will get back to you soon.</p>
+            <button style="background-color: var(--accent-color); color: var(--white-2); padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">OK</button>
+        `;
+        document.body.appendChild(messageBox);
+
+        messageBox.querySelector('button').addEventListener('click', () => {
+            document.body.removeChild(messageBox);
+        });
+
+        form.reset();
+    });
+
+    if (formBtn) {
+        formBtn.removeAttribute('disabled');
+    }
 }
 
-// Update copyright year (moved from inline script to here)
+// Update copyright year
 document.addEventListener('DOMContentLoaded', function() {
-  const yearElement = document.querySelector('#current-year');
-  if (yearElement) {
-    yearElement.textContent = new Date().getFullYear();
-  }
-});
-
-
-
-
-
-
-
-//ABOUT TYPEWRITER
-document.addEventListener("DOMContentLoaded", function() {
-  const text = "About Me";
-  const typewriterElement = document.getElementById("typewriter");
-  
-  // Clear initial text to start typing effect
-  typewriterElement.textContent = "";
-  
-  let index = 0;
-
-  function type() {
-    if (index < text.length) {
-      typewriterElement.textContent += text.charAt(index);
-      index++;
-      setTimeout(type, 150); // Typing speed (ms)
-    } else {
-      // Add blinking cursor after typing completes
-      typewriterElement.classList.add("blinking");
+    const yearElement = document.querySelector('#current-year');
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
     }
-  }
-
-  type();
 });
-
-
-
-
-
-
-
-
