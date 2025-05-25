@@ -8,7 +8,7 @@
   <title>Pratik Kumar - Portfolio</title>
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="./assets/images/logo.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="favi.png" type="image/x-icon">
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
@@ -45,7 +45,7 @@
 
 
         <div class="info-content">
-          <h1 class="name" title="Pratik kumar">Pratik kumar</h1>
+          <h1 class="name" title="Pratik Kumar">Pratik Kumar</h1>
           <p class="title">Web Developer | Designer | Freelancer</p>
         </div>
 
@@ -428,7 +428,7 @@ Built a strong academic foundation from Class 1 to 10.
       <article class="portfolio" data-page="portfolio">
 
         <header>
-          <h2 class="h2 article-title">Portfolio</h2>
+          <h2 class="h2 article-title" id="typewriter-portfolio">Portfolio</h2>
         </header>
 
         <section class="projects">
@@ -530,7 +530,7 @@ Built a strong academic foundation from Class 1 to 10.
       <article class="contact" data-page="contact">
 
         <header>
-          <h2 class="h2 article-title">Contact</h2>
+          <h2 class="h2 article-title" id="typewriter-contact">Contact</h2>
         </header>
 
         <section class="mapbox" data-mapbox>
@@ -567,6 +567,7 @@ Built a strong academic foundation from Class 1 to 10.
       </article>
 
     </div>
+    
 
   </main>
 
@@ -609,6 +610,54 @@ Built a strong academic foundation from Class 1 to 10.
       
     });
   </script>
+
+
+<footer style="text-align: center; padding: 20px;">
+  <p style="margin: 0; font-size: 14px; font-weight: 400;">
+    <span style="
+      background-image: linear-gradient(90deg, #d2c7c4, #d2c7c4);
+      color: transparent;
+      background-clip: text;
+      display: inline;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;">
+     <strong style="font-weight: 800;">&copy;</strong> 2025 <p><strong style="font-weight: 700;">Pratik Kumar</strong>. All rights reserved.</span></p></span>
+  </p>
+</footer>
+
+<!-- Image Modal (place this just before </body>) -->
+<div id="imgModal" class="modal">
+  <span class="close">&times;</span>
+  <img class="modal-content" id="modalImg">
+</div>
+
+
+
+<script>
+  const modal = document.getElementById("imgModal");
+  const modalImg = document.getElementById("modalImg");
+  const avatarImg = document.querySelector(".avatar-box img");
+  const closeBtn = document.querySelector(".close");
+
+  avatarImg.onclick = function () {
+    modal.style.display = "block";
+    modalImg.src = this.src;
+  }
+
+  closeBtn.onclick = function () {
+    modal.style.display = "none";
+  }
+
+  window.onclick = function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
+
+
+
 
 </body>
 
