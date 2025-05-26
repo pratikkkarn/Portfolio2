@@ -394,3 +394,25 @@ document.addEventListener('DOMContentLoaded', function() {
         yearElement.textContent = new Date().getFullYear();
     }
 });
+const observeFadeInOnScroll = (selector, animationClass, stagger = 100) => {
+  const elements = document.querySelectorAll(selector);
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add(animationClass);
+        }, index * stagger);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  elements.forEach(el => observer.observe(el));
+};
+
+// Apply animations when DOM is fully loaded
+window.addEventListener("DOMContentLoaded", () => {
+  observeFadeInOnScroll(".contact-item", "animate-fade-in-left", 150); // Sidebar bullets
+  observeFadeInOnScroll(".timeline-item", "fade-in-up", 150); // Resume
+  observeFadeInOnScroll(".project-item.active", "animate-fade-in-bottom", 120); // Portfolio
+});
