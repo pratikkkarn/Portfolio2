@@ -3,12 +3,13 @@
  * Defines custom properties for colors, typography, shadows, and transitions.
  */
 :root {
-  /* Colors */
+  /* Colors - Updated for a cooler, more vibrant palette */
   --bg-gradient-dark: linear-gradient(145deg, hsl(220, 15%, 12%) 0%, hsl(220, 10%, 8%) 100%);
   --bg-gradient-card: linear-gradient(145deg, hsl(220, 15%, 15%) 0%, hsl(220, 10%, 10%) 100%);
-  --bg-gradient-accent: linear-gradient(to right, hsl(25, 100%, 65%), hsl(45, 100%, 55%));
+  --bg-floating-gradient: linear-gradient(90deg, hsl(220, 10%, 3%) 0%, hsl(200, 70%, 12%) 20%, hsl(280, 80%, 8%) 40%, hsl(180, 70%, 12%) 60%, hsl(220, 10%, 3%) 80%, hsl(280, 80%, 8%) 100%);
+  --bg-gradient-accent: linear-gradient(to right, hsl(270, 100%, 70%), hsl(300, 100%, 65%)); /* Purple to Magenta */
   --border-gradient-subtle: linear-gradient(to bottom right, hsla(220, 15%, 25%, 0.5) 0%, hsla(220, 10%, 15%, 0) 50%);
-  --text-gradient-primary: linear-gradient(to right, hsl(25, 100%, 65%), hsl(45, 100%, 55%));
+  --text-gradient-primary: linear-gradient(to right, hsl(270, 100%, 70%), hsl(300, 100%, 65%)); /* Purple to Magenta */
   --jet: hsl(220, 10%, 18%);
   --onyx: hsl(220, 10%, 12%);
   --eerie-black-1: hsl(220, 10%, 10%);
@@ -16,12 +17,13 @@
   --smoky-black: hsl(220, 10%, 5%);
   --white-1: hsl(0, 0%, 95%);
   --white-2: hsl(0, 0%, 98%);
-  --accent-color: hsl(35, 100%, 60%);
-  --accent-color-light: hsl(45, 100%, 75%);
+  --accent-color: hsl(285, 100%, 65%); /* Mid-purple */
+  --accent-color-light: hsl(295, 100%, 75%); /* Lighter purple/pink */
   --light-gray: hsl(220, 10%, 70%);
   --light-gray-70: hsla(220, 10%, 70%, 0.7);
   --error-red: hsl(0, 70%, 50%);
-  --bg-floating-gradient: linear-gradient(90deg, hsl(240, 10%, 3%) 0%, hsl(200, 40%, 25%) 20%, hsl(240, 10%, 3%) 40%, hsl(200, 40%, 25%) 60%, hsl(240, 10%, 3%) 80%, hsl(200, 40%, 25%) 100%);
+  
+  --particle-color: hsla(220, 10%, 30%, 0.5);
 
   /* Typography */
   --ff-poppins: 'Poppins', sans-serif;
@@ -44,11 +46,14 @@
   --shadow-3: 0 12px 35px hsla(0, 0%, 0%, 0.5);
   --shadow-4: 0 16px 45px hsla(0, 0%, 0%, 0.6);
   --shadow-5: 0 20px 60px hsla(0, 0%, 0%, 0.7);
+  /* Adjusted glow shadow color to match new accent */
+  --shadow-glow: 0 0 15px hsla(285, 100%, 65%, 0.5);
 
   /* Transition */
   --transition-1: 0.4s ease-in-out; /* Slightly slower for general elements */
   --transition-2: 0.8s ease-in-out; /* Slower for page transitions and images */
   --transition-3: 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); /* Slower for skill bars */
+  --transition-4: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Springy transition */
 }
 
 /*-----------------------------------*\
@@ -117,7 +122,26 @@ body {
   background-size: 2000% 100%;
   animation: backgroundPan 40s linear infinite alternate; /* Slower background pan */
   color: var(--light-gray);
+  position: relative; /* Needed for pseudo-elements */
+  overflow-x: hidden; /* Prevent horizontal scroll from particles */
 }
+
+/* Background particle container */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  background-image: radial-gradient(circle at top left, var(--particle-color) 1px, transparent 1px),
+                    radial-gradient(circle at bottom right, var(--particle-color) 1px, transparent 1px);
+  background-size: 30px 30px; /* Adjust particle density */
+  animation: particleMove 120s linear infinite; /* Very slow particle movement */
+}
+
 
 /*-----------------------------------*\
  * #ANIMATION KEYFRAMES
@@ -187,6 +211,28 @@ body {
   /* To width will be set by JS based on text length */
 }
 
+/* New: Subtle particle background movement */
+@keyframes particleMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 100% 100%; }
+}
+
+/* New: Hover Glow Effect - Adjusted for new accent color */
+@keyframes border-glow {
+  0% { box-shadow: 0 0 0px var(--accent-color); }
+  50% { box-shadow: 0 0 10px var(--accent-color-light), 0 0 20px hsla(285, 100%, 65%, 0.3); }
+  100% { box-shadow: 0 0 0px var(--accent-color); }
+}
+
+/* New: Text Shimmer Effect (for titles) - Adjusted for new accent color */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
 
 /*-----------------------------------*\
  * #REUSED STYLES
@@ -203,7 +249,11 @@ body {
   will-change: transform, opacity, max-height, box-shadow; /* Added will-change */
 }
 
-.sidebar:hover, article:hover { box-shadow: var(--shadow-3); }
+.sidebar:hover, article:hover {
+  box-shadow: var(--shadow-3);
+  /* Added subtle glow on hover for main containers */
+  border-color: hsla(285, 100%, 65%, 0.5); /* New glow color */
+}
 
 .separator {
   width: 100%;
@@ -226,12 +276,22 @@ body {
   box-shadow: var(--shadow-1);
   z-index: 1;
   overflow: hidden;
+  transition: transform var(--transition-4); /* Springy transition */
 }
+
+.icon-box:hover,
+.icon-box:active { /* Added :active for touch devices */
+  transform: scale(1.1) rotate(5deg); /* Bounce and slight rotate */
+}
+
 
 .icon-box::before {
   content: "";
   position: absolute;
-  inset: 1px;
+  top: 1px; /* Retain top inset */
+  right: 1px; /* Retain right inset */
+  bottom: 1px; /* Retain bottom inset */
+  left: 0px; /* Moved slightly to the left from 1px */
   background: var(--eerie-black-1);
   border-radius: inherit;
   z-index: -1;
@@ -247,7 +307,7 @@ article {
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0;
+  opacity: 0; /* Changed for scroll-triggered animation */
   visibility: hidden;
   pointer-events: none;
   transform: translateY(20px); /* Initial state for page transition */
@@ -280,6 +340,13 @@ article.active {
   overflow: hidden; /* Hide overflow */
   /* Re-added border-right for blinking effect */
   border-right: 0.15em solid transparent;
+  /* Removed shimmer animation initially from here, will be added by JS */
+  background: linear-gradient(90deg, var(--white-2) 0%, var(--accent-color) 20%, var(--white-2) 40%, var(--accent-color) 60%, var(--white-2) 80%, var(--accent-color) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text; /* Vendor prefix for background-clip */
+  -webkit-text-fill-color: transparent; /* Ensures text color is the gradient */
+  background-clip: text; /* Standard property */
+  color: transparent; /* Fallback for browsers not supporting background-clip */
 }
 
 .article-title::after {
@@ -293,11 +360,12 @@ article.active {
   border-radius: 3px;
 }
 
-/* Class added by JS to enable blinking cursor after typing */
+/* Class added by JS to enable blinking cursor after typing and add shimmer */
 .article-title.typewriter-active {
   border-right-color: var(--accent-color); /* Blinking cursor */
-  animation: blink-cursor 0.75s step-end infinite;
+  animation: blink-cursor 0.75s step-end infinite, shimmer 5s infinite linear; /* Combine animations */
 }
+
 
 /* Heading Styles */
 .h2, .h3, .h4, .h5 {
@@ -352,7 +420,7 @@ article.active {
 
 .content-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-3);
+  box-shadow: var(--shadow-3), var(--shadow-glow); /* Added glow */
 }
 
 /* General animation classes applied by JavaScript */
@@ -397,7 +465,8 @@ main {
 }
 
 .avatar-box {
-  background-image: linear-gradient(to right, #fc72ff, #8f68ff, #487bff, #8f68ff, #fc72ff);
+  /* Updated gradient for avatar border */
+  background-image: linear-gradient(to right, hsl(270, 100%, 70%), hsl(300, 100%, 65%), hsl(270, 100%, 70%));
   background-size: 400% auto;
   animation: text-gradient-animation 3s linear infinite; /* Adjusted duration for smoother animation */
   padding: 3px;
@@ -419,6 +488,10 @@ main {
   transition: transform 0.5s ease;
   will-change: transform; /* Added will-change */
 }
+.avatar-box img:hover {
+  transform: scale(1.05) rotate(2deg); /* Slight zoom and rotate on hover */
+}
+
 
 .info-content .name {
   color: var(--white-2);
@@ -435,6 +508,7 @@ main {
   text-align: center;
   margin: 0 auto;
   border-bottom: 2px solid transparent;
+  /* Updated border-image gradient */
   border-image: var(--text-gradient-primary) 1;
   padding-bottom: 0.01em;
   box-sizing: border-box;
@@ -449,7 +523,12 @@ main {
   padding: 3px 12px;
   border-radius: 8px;
   box-shadow: var(--shadow-1);
+  transition: box-shadow var(--transition-1);
 }
+.info-content .title:hover {
+  box-shadow: var(--shadow-glow); /* Apply glow on hover */
+}
+
 
 .info_more-btn {
   position: absolute;
@@ -510,6 +589,8 @@ main {
   display: flex;
   align-items: center;
   gap: 16px;
+  opacity: 0; /* Initial state for scroll-triggered animation */
+  transform: translateY(20px); /* Initial state for scroll-triggered animation */
 }
 
 .contact-info {
@@ -549,6 +630,7 @@ main {
 .social-item .social-link:hover {
   color: var(--accent-color);
   transform: translateY(-3px) scale(1.1);
+  filter: drop-shadow(0 0 5px var(--accent-color)); /* Glow for social icons */
 }
 
 /*-----------------------------------*\
@@ -601,10 +683,14 @@ main {
 .navbar-link:hover, .navbar-link:focus {
   color: var(--white-1);
   transform: translateY(-2px);
+  /* Sharper, more prominent glow on hover */
+  text-shadow: 0 0 8px var(--accent-color), 0 0 15px hsla(285, 100%, 65%, 0.4); /* New glow color */
 }
 
 .navbar-link.active {
   color: var(--accent-color);
+  /* Even stronger and clearer glow for the active link */
+  text-shadow: 0 0 12px var(--accent-color), 0 0 25px hsla(285, 100%, 65%, 0.6); /* New glow color */
 }
 
 .navbar-link.active::after {
@@ -621,7 +707,8 @@ main {
   font-size: var(--fs-6);
   font-weight: var(--fw-300);
   line-height: 1.6;
-  background-image: linear-gradient(to right, #fc72ff, #8f68ff, #487bff, #8f68ff, #fc72ff);
+  /* Updated gradient for about text */
+  background-image: linear-gradient(to right, hsl(270, 100%, 70%), hsl(300, 100%, 65%), hsl(270, 100%, 70%));
   background-size: 400% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -650,15 +737,13 @@ main {
   border-radius: 14px;
   box-shadow: var(--shadow-2);
   z-index: 1;
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 0; /* Initial state for scroll-triggered animation */
+  transform: translateY(20px); /* Initial state for scroll-triggered animation */
   transition: transform var(--transition-1), box-shadow var(--transition-1); /* Explicitly list */
   will-change: transform, opacity, box-shadow; /* Added will-change */
 }
 
-.service-item.fade-in-up {
-  animation: fade-in-up 1s ease-out forwards; /* Slower animation */
-}
+/* Removed .service-item.fade-in-up from here, now handled by JS */
 
 .service-item::before {
   content: "";
@@ -671,7 +756,7 @@ main {
 
 .service-item:hover {
   transform: translateY(-5px) scale(1.02); /* Added scale for more noticeable animation */
-  box-shadow: var(--shadow-4); /* Increased shadow for more impact */
+  box-shadow: var(--shadow-4), var(--shadow-glow); /* Increased shadow for more impact, added glow */
   transition: transform var(--transition-1), box-shadow var(--transition-1); /* Explicitly list */
 }
 
@@ -681,7 +766,12 @@ main {
   border-radius: 10px;
   padding: 10px;
   box-shadow: inset 0 0 5px hsla(0,0%,0%,0.5);
+  transition: transform var(--transition-4); /* Springy transition */
 }
+.service-icon-box:hover {
+  transform: rotate(-8deg) scale(1.1); /* Rotate and scale on hover */
+}
+
 
 .service-icon-box img { margin: auto; }
 
@@ -725,19 +815,17 @@ main {
   border: 1px solid var(--jet);
   border-radius: 14px;
   box-shadow: var(--shadow-2);
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 0; /* Initial state for scroll-triggered animation */
+  transform: translateY(20px); /* Initial state for scroll-triggered animation */
   transition: transform var(--transition-1), box-shadow var(--transition-1); /* Explicitly list */
   will-change: transform, opacity, box-shadow; /* Added will-change */
 }
 
-.testimonials-item.fade-in-up {
-  animation: fade-in-up 1s ease-out forwards; /* Slower animation */
-}
+/* Removed .testimonials-item.fade-in-up from here, now handled by JS */
 
 .testimonials-item:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-3);
+  box-shadow: var(--shadow-3), var(--shadow-glow); /* Added glow */
   transition: transform var(--transition-1), box-shadow var(--transition-1); /* Explicitly list */
 }
 
@@ -746,11 +834,17 @@ main {
   top: 0;
   left: 0;
   transform: translate(15px, -25px);
+  /* Updated gradient for testimonials avatar border */
   background: var(--bg-gradient-accent);
   border-radius: 14px;
   box-shadow: var(--shadow-1);
   padding: 3px;
+  transition: transform var(--transition-1);
 }
+.testimonials-avatar-box:hover {
+  transform: translate(15px, -25px) scale(1.05); /* Slight scale on hover */
+}
+
 
 .testimonials-avatar-box img { border-radius: 12px; }
 
@@ -792,32 +886,30 @@ main {
   border: 1px solid var(--jet);
   border-radius: 14px;
   box-shadow: var(--shadow-1);
-  opacity: 0;
-  transform: scale(0.8);
+  opacity: 0; /* Initial state for scroll-triggered animation */
+  transform: scale(0.8); /* Initial state for scroll-triggered animation */
   transition: transform var(--transition-1), box-shadow var(--transition-1); /* Explicitly list */
   will-change: transform, opacity, box-shadow; /* Added will-change */
 }
 
-.clients-item.scale-in {
-  animation: scale-in 0.8s ease-out forwards; /* Slower animation */
-}
+/* Removed .clients-item.scale-in from here, now handled by JS */
 
 .clients-item:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--shadow-2), var(--shadow-glow); /* Added glow */
   transition: transform var(--transition-1), box-shadow var(--transition-1); /* Explicitly list */
 }
 
 .clients-item img {
   width: 100%;
   filter: grayscale(1);
-  transition: filter var(--transition-1), transform var(--transition-1); /* Explicitly list */
+  transition: filter var(--transition-1), transform var(--transition-1);
 }
 
 .clients-item img:hover {
   filter: grayscale(0);
   transform: scale(1.05);
-  transition: filter var(--transition-1), transform var(--transition-1); /* Explicitly list */
+  transition: filter var(--transition-1), transform var(--transition-1);
 }
 
 /*-----------------------------------*\
@@ -843,13 +935,11 @@ main {
 
 .timeline-item {
   position: relative;
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 0; /* Initial state for scroll-triggered animation */
+  transform: translateY(20px); /* Initial state for scroll-triggered animation */
 }
 
-.timeline-item.fade-in-up {
-  animation: fade-in-up 1s ease-out forwards; /* Slower animation */
-}
+/* Removed .timeline-item.fade-in-up from here, now handled by JS */
 
 .timeline-item:not(:last-child) { margin-bottom: 20px; }
 
@@ -861,7 +951,7 @@ main {
 }
 
 .timeline-list span {
-  color: var(--accent-color-light);
+  color: var(--accent-color-light); /* Updated color */
   font-weight: var(--fw-400);
   line-height: 1.6;
 }
@@ -870,7 +960,7 @@ main {
   content: "";
   position: absolute;
   top: -25px;
-  left: -30px;
+  left: -33px;
   width: 1px;
   height: calc(100% + 50px);
   background: var(--jet);
@@ -883,9 +973,11 @@ main {
   left: -33px;
   height: 6px;
   width: 6px;
+  /* Updated background gradient for timeline dots */
   background: var(--text-gradient-primary);
   border-radius: 50%;
   box-shadow: 0 0 0 4px var(--jet);
+  animation: pulse 1.5s infinite alternate; /* Subtle pulse for timeline dots */
 }
 
 .timeline-text {
@@ -924,7 +1016,8 @@ main {
 }
 
 .skill-progress-fill {
-  background: linear-gradient(to right, #fc72ff, #8f68ff, #487bff, #8f68ff, #fc72ff);
+  /* Updated gradient for skill progress bar */
+  background: linear-gradient(to right, hsl(270, 100%, 70%), hsl(300, 100%, 65%), hsl(270, 100%, 70%));
   height: 100%;
   border-radius: inherit;
   width: 0%;
@@ -952,7 +1045,7 @@ main {
   transition: box-shadow var(--transition-1);
 }
 
-.filter-select-box:hover { box-shadow: var(--shadow-3); }
+.filter-select-box:hover { box-shadow: var(--shadow-3), var(--shadow-glow); } /* Added glow */
 
 .filter-select {
   display: flex;
@@ -1031,9 +1124,9 @@ main {
 
 .project-item {
   display: none; /* Controlled by JS active class */
-  opacity: 0; /* Hidden initially, animation will reveal */
+  opacity: 0; /* Initial state for scroll-triggered animation */
+  /* transform is handled by animate-left/right classes */
   will-change: transform, opacity, box-shadow; /* Added will-change */
-  /* Removed transform: translateY(20px); as translateX will be used by animations */
 }
 
 .project-item.active {
@@ -1057,13 +1150,13 @@ main {
   border: 1px solid var(--jet);
   border-radius: 16px;
   box-shadow: var(--shadow-2);
-  transition: transform var(--transition-1), box-shadow var(--transition-1); /* Explicitly list */
+  transition: transform var(--transition-1), box-shadow var(--transition-1);
 }
 
 .project-item > a:hover {
   transform: translateY(-8px);
-  box-shadow: var(--shadow-4);
-  transition: transform var(--transition-1), box-shadow var(--transition-1); /* Explicitly list */
+  box-shadow: var(--shadow-4), var(--shadow-glow); /* Added glow */
+  transition: transform var(--transition-1), box-shadow var(--transition-1);
 }
 
 .project-img {
@@ -1156,15 +1249,12 @@ main {
   box-shadow: var(--shadow-2);
   border-radius: 16px;
   z-index: 1;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: transform var(--transition-1), box-shadow var(--transition-1); /* Explicitly list */
-  will-change: transform, opacity, box-shadow; /* Added will-change */
+  opacity: 0; /* Initial state for scroll-triggered animation */
+  transform: translateY(20px); /* Initial state for scroll-triggered animation */
+  transition: transform var(--transition-1), box-shadow var(--transition-1);
 }
 
-.blog-post-item > a.fade-in-up {
-  animation: fade-in-up 1s ease-out forwards; /* Slower animation */
-}
+/* Removed .blog-post-item > a.fade-in-up from here, now handled by JS */
 
 .blog-post-item > a::before {
   content: "";
@@ -1288,7 +1378,7 @@ main {
 
 .form-input:focus {
   border-color: var(--accent-color);
-  box-shadow: 0 0 0 3px hsla(35, 100%, 60%, 0.2);
+  box-shadow: 0 0 0 3px hsla(285, 100%, 65%, 0.2); /* New glow color */
 }
 
 textarea.form-input {
@@ -1309,6 +1399,7 @@ textarea.form-input::-webkit-resizer { display: none; }
 .form-btn {
   position: relative;
   width: 100%;
+  /* Updated gradient for form button */
   background: var(--bg-gradient-accent);
   color: var(--white-2);
   display: flex;
@@ -1322,6 +1413,7 @@ textarea.form-input::-webkit-resizer { display: none; }
   box-shadow: var(--shadow-3);
   z-index: 1;
   transition: var(--transition-1);
+  overflow: hidden; /* For pseudo-element effects */
 }
 
 .form-btn::before {
@@ -1337,7 +1429,8 @@ textarea.form-input::-webkit-resizer { display: none; }
 .form-btn:hover {
   background: var(--accent-color-light);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-4);
+  box-shadow: var(--shadow-4), var(--shadow-glow); /* Added glow */
+  animation: border-glow 1.5s infinite alternate; /* Border glow on hover */
 }
 
 .form-btn:disabled {
@@ -1345,6 +1438,7 @@ textarea.form-input::-webkit-resizer { display: none; }
   cursor: not-allowed;
   transform: none;
   box-shadow: var(--shadow-2);
+  animation: none; /* Disable glow when disabled */
 }
 
 .form-btn:disabled:hover {
@@ -1487,6 +1581,7 @@ textarea.form-input::-webkit-resizer { display: none; }
 .modal-close-btn ion-icon { --ionicon-stroke-width: 50px; }
 
 .modal-avatar-box {
+  /* Updated gradient for modal avatar border */
   background: var(--bg-gradient-accent);
   width: max-content;
   border-radius: 14px;
@@ -1592,6 +1687,12 @@ textarea.form-input::-webkit-resizer { display: none; }
   /* Hide the main portfolio heading and horizontal filter list on small screens */
   .portfolio-heading { display: none; }
   .filter-list { display: none; }
+
+  /* Explicitly re-declare for active state on small devices */
+  .icon-box:active {
+    transform: scale(1.1) rotate(5deg);
+    transition: transform var(--transition-4);
+  }
 }
 
 /* Medium screens (min-width: 450px) */
@@ -1726,7 +1827,7 @@ textarea.form-input::-webkit-resizer { display: none; }
   }
   .clients-item { min-width: calc(33.33% - 35px); }
   .timeline-list { margin-left: 65px; }
-  .timeline-item:not(:last-child)::before { left: -40px; }
+  .timeline-item:not(:last-child)::before { left: -43px; }
   .timeline-item::after {
     height: 8px;
     width: 8px;
@@ -1782,8 +1883,14 @@ textarea.form-input::-webkit-resizer { display: none; }
     font-size: var(--fs-5);
     transition: var(--transition-1);
   }
-  .filter-item button:hover { color: var(--accent-color); }
-  .filter-item button.active { color: var(--accent-color); }
+  .filter-item button:hover {
+    color: var(--accent-color);
+    text-shadow: 0 0 5px var(--accent-color); /* Subtle text shadow on hover */
+  }
+  .filter-item button.active {
+    color: var(--accent-color);
+    text-shadow: 0 0 8px var(--accent-color), 0 0 15px hsla(285, 100%, 65%, 0.3); /* Stronger glow when active */
+  }
   .project-list, .blog-posts-list { grid-template-columns: 1fr 1fr; }
   .input-wrapper { grid-template-columns: 1fr 1fr; }
   .form-btn {
@@ -1895,4 +2002,28 @@ textarea.form-input::-webkit-resizer { display: none; }
   }
   .social-list { justify-content: center; }
   .timeline-text { max-width: 700px; }
+}
+
+
+
+.fade-in-up {
+  animation: fade-in-up 1s ease-out forwards;
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+@media (max-width: 450px) {
+  /* ...existing styles... */
+
+  .info_more-btn ion-icon {
+    transition: transform 0.4s ease-in-out;
+  }
+
+  .sidebar.active .info_more-btn ion-icon {
+    transform: rotate(180deg);
+  }
 }
