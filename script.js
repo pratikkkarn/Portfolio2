@@ -344,23 +344,50 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// Form submission handling
+// Form submission handling - MODIFIED SECTION
 if (form) {
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) { // Make the function async
         e.preventDefault();
 
         const formData = new FormData(form);
-        const data = Object.fromEntries(formData);
+        // Add your Web3Forms access key - REPLACE THIS WITH YOUR ACTUAL KEY
+        formData.append("access_key", "YOUR_WEB3FORMS_ACCESS_KEY_HERE"); //
 
-        console.log('Form submitted:', data);
+        console.log('Form submitted (client-side data):', Object.fromEntries(formData));
 
+        try {
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST", //
+                body: formData //
+            });
+
+            const result = await response.json(); //
+
+            if (result.success) { //
+                console.log('Web3Forms submission successful:', result);
+                // Show success message
+                showFeedbackMessage("Thank you for your message! I will get back to you soon.", false);
+                form.reset(); // Reset form only on success
+            } else {
+                console.error('Web3Forms submission failed:', result);
+                // Show error message
+                showFeedbackMessage(`Failed to send message: ${result.message || 'Please try again.'}`, true);
+            }
+        } catch (error) {
+            console.error('Network or API error:', error);
+            showFeedbackMessage("There was a problem sending your message. Please try again later.", true);
+        }
+    });
+
+    // Helper function to show feedback messages
+    function showFeedbackMessage(message, isError) {
         const messageBox = document.createElement('div');
         messageBox.style.cssText = `
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #333;
+            background-color: ${isError ? 'var(--error-red)' : '#333'}; /* Use error color for errors */
             color: white;
             padding: 20px;
             border-radius: 8px;
@@ -368,22 +395,35 @@ if (form) {
             z-index: 1000;
             text-align: center;
             font-family: 'Poppins', sans-serif;
+            opacity: 0; /* Start hidden for fade-in */
+            transition: opacity 0.3s ease-in-out;
         `;
         messageBox.innerHTML = `
-            <p>Thank you for your message! I will get back to you soon.</p>
+            <p>${message}</p>
             <button style="background-color: var(--accent-color); color: var(--white-2); padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">OK</button>
         `;
         document.body.appendChild(messageBox);
 
-        messageBox.querySelector('button').addEventListener('click', () => {
-            document.body.removeChild(messageBox);
-        });
+        // Fade in
+        setTimeout(() => {
+            messageBox.style.opacity = '1';
+        }, 10);
 
-        form.reset();
-    });
+        messageBox.querySelector('button').addEventListener('click', () => {
+            messageBox.style.opacity = '0'; // Fade out
+            setTimeout(() => {
+                document.body.removeChild(messageBox);
+            }, 300); // Remove after fade out
+        });
+    }
 
     if (formBtn) {
-        formBtn.removeAttribute('disabled');
+        // Initially set disabled if form is not valid on load
+        if (!form.checkValidity()) {
+            formBtn.setAttribute("disabled", "");
+        } else {
+            formBtn.removeAttribute('disabled');
+        }
     }
 }
 
