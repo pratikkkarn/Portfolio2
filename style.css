@@ -6,7 +6,16 @@
   /* Colors - Updated for a cooler, more vibrant palette */
   --bg-gradient-dark: linear-gradient(145deg, hsl(220, 15%, 12%) 0%, hsl(220, 10%, 8%) 100%);
   --bg-gradient-card: linear-gradient(145deg, hsl(220, 15%, 15%) 0%, hsl(220, 10%, 10%) 100%);
-  --bg-floating-gradient: linear-gradient(90deg, hsl(220, 10%, 3%) 0%, hsl(200, 70%, 12%) 20%, hsl(280, 80%, 8%) 40%, hsl(180, 70%, 12%) 60%, hsl(220, 10%, 3%) 80%, hsl(280, 80%, 8%) 100%);
+  --bg-floating-gradient: linear-gradient(
+  90deg,
+  hsl(220, 15%, 5%) 0%,       /* Deep Navy */
+  hsl(210, 70%, 15%) 20%,     /* Teal Blue */
+  hsl(280, 85%, 12%) 40%,     /* Deep Purple */
+  hsl(170, 80%, 20%) 60%,     /* Emerald Cyan */
+  hsl(220, 15%, 5%) 80%,      /* Deep Navy (repeat for loop effect) */
+  hsl(290, 80%, 15%) 100%     /* Vivid Violet */
+);
+
   --bg-gradient-accent: linear-gradient(to right, hsl(270, 100%, 70%), hsl(300, 100%, 65%)); /* Purple to Magenta */
   --border-gradient-subtle: linear-gradient(to bottom right, hsla(220, 15%, 25%, 0.5) 0%, hsla(220, 10%, 15%, 0) 50%);
   --text-gradient-primary: linear-gradient(to right, hsl(270, 100%, 70%), hsl(300, 100%, 65%)); /* Purple to Magenta */
