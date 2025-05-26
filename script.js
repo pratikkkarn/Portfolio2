@@ -1,5 +1,8 @@
 'use strict';
 
+// Helper function to check if it's a small device based on a media query breakpoint
+const isSmallDevice = () => window.matchMedia("(max-width: 767px)").matches;
+
 // element toggle function
 const elementToggleFunc = function (elem) {
     elem.classList.toggle("active");
@@ -82,25 +85,87 @@ for (let i = 0; i < selectItems.length; i++) {
 // filter variables
 const filterItems = document.querySelectorAll("[data-filter-item]");
 
+// NEW: Intersection Observer for portfolio items
+let portfolioItemObserver; // Declare globally
+
+const initPortfolioItemObserver = () => {
+    // Disconnect existing observer if it's already observing
+    if (portfolioItemObserver) {
+        portfolioItemObserver.disconnect();
+    }
+
+    portfolioItemObserver = new IntersectionObserver((entries, observer) => {
+        let visibleCount = 0; // To track index for staggered animation among currently intersecting items
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                // Ensure element is ready for animation by resetting its state
+                entry.target.classList.remove("animate-fade-in-left", "animate-fade-in-right", "fade-in-up", "scale-in");
+                entry.target.style.animation = 'none'; // Temporarily disable animation
+                entry.target.style.animationDelay = '';
+                entry.target.style.opacity = '0';
+                entry.target.style.transform = 'translateX(-50px)';
+                void entry.target.offsetWidth; // Force reflow
+
+                // Apply animation with staggered delay using requestAnimationFrame for smoothness
+                requestAnimationFrame(() => {
+                    entry.target.style.animation = ''; // Re-enable animation
+                    entry.target.classList.add('animate-fade-in-left'); // Always animate from left for consistency
+                    entry.target.style.animationDelay = `${visibleCount * 150}ms`; // Staggered delay (150ms per item)
+                    entry.target.style.opacity = '1'; // Ensure opacity is set
+                    entry.target.style.transform = ''; // Reset transform to animate to
+                    visibleCount++;
+                });
+
+                observer.unobserve(entry.target); // Stop observing once animated
+            }
+        });
+    }, { threshold: 0.2 }); // Trigger when 20% of the item is visible
+};
+
+
 const filterFunc = function (selectedValue) {
-    // First, remove active and animation classes from all
+    // Stop observing all items before re-evaluating and re-observing
     filterItems.forEach(item => {
-        item.classList.remove("active");
-        item.classList.remove('fade-in-up');
-        item.style.animationDelay = '';
+        if (portfolioItemObserver) {
+            portfolioItemObserver.unobserve(item);
+        }
+        // Step 1: Immediately hide and reset the animation state for all items
+        item.classList.remove("active", "animate-fade-in-left", "animate-fade-in-right", "animate-fade-in-bottom", "fade-in-up", "scale-in");
+        item.style.animation = 'none'; // Crucial: Temporarily disable animation
+        item.style.animationDelay = ''; // Clear any previous inline animation delay
+        item.style.opacity = '0'; // Ensure it starts hidden
+        item.style.transform = 'translateX(-50px)'; // Initial state for animate-fade-in-left
+        item.style.display = 'none'; // Hide all items initially
+
+        // Force a reflow (important!) to ensure the browser registers the "reset" state
+        // This makes the browser re-render before we apply new styles/animations
+        void item.offsetWidth;
     });
 
-    let delay = 0;
-    filterItems.forEach(item => {
-        if (selectedValue === "all" || item.dataset.category === selectedValue) {
-            item.classList.add("active");
-            void item.offsetWidth; // Force reflow
-            setTimeout(() => {
-                item.classList.add('fade-in-up');
-                item.style.animationDelay = `${delay}ms`;
-            }, 10); // Small delay to ensure removal registers
-            delay += 120; // Slightly slower stagger for projects
-        }
+    // Use requestAnimationFrame to ensure all items are hidden before showing new ones
+    // This allows the browser to apply the 'display: none' and reset styles before applying animations.
+    requestAnimationFrame(() => {
+        let visibleIndex = 0; // To stagger animation for currently visible items
+        filterItems.forEach(item => {
+            if (selectedValue === "all" || item.dataset.category === selectedValue) {
+                item.style.display = 'block'; // Make the item visible
+                item.classList.add('active'); // Keep active class for display
+
+                // Step 2: Re-enable animation and apply it with a staggered delay
+                // Clear any previous inline animation to ensure it restarts
+                item.style.animation = ''; // Re-enable animation (clears 'none')
+                item.style.animationDelay = `${visibleIndex * 150}ms`; // Apply staggered delay
+                item.classList.add('animate-fade-in-left'); // Re-apply the animation class
+                // The animation itself (fadeInLeft) will handle opacity and transform
+
+                visibleIndex++;
+
+                // If on a small device, re-observe for potential future scroll-triggered animations
+                if (isSmallDevice() && portfolioItemObserver) {
+                    portfolioItemObserver.observe(item);
+                }
+            }
+        });
     });
 }
 
@@ -147,11 +212,6 @@ const navigationLinks = document.querySelectorAll("[data-nav-link]");
 const pages = document.querySelectorAll("[data-page]");
 const skillProgressFills = document.querySelectorAll(".skill-progress-fill"); // Get all skill progress bars
 const articleTitles = document.querySelectorAll(".article-title"); // Get all article titles for typewriter effect
-
-// Elements for additional animations
-const serviceItems = document.querySelectorAll(".service-item");
-const timelineItems = document.querySelectorAll(".timeline-item");
-const clientItems = document.querySelectorAll(".clients-item"); // If you uncomment the clients section
 
 // Store original texts of h2 titles
 const originalTitles = new Map();
@@ -312,17 +372,21 @@ for (let i = 0; i < navigationLinks.length; i++) {
             if (targetPageName === 'resume') {
                 // Skill bars will be animated by IntersectionObserver when scrolled into view
                 initSkillObserver(); // Initialize observer for resume page
-                applyStaggeredFadeInUp(timelineItems, 150); // Slower stagger for timeline
+                // Observe timeline items for fade-in-up animation on scroll
+                observeFadeInOnScroll(".timeline-item", "fade-in-up", 150);
             } else if (targetPageName === 'about') {
-                applyStaggeredFadeInUp(serviceItems, 150); // Slower stagger for services
+                // Observe service items and testimonials for fade-in-up animation on scroll
+                observeFadeInOnScroll(".service-item", "fade-in-up", 150);
+                observeFadeInOnScroll(".testimonials-item", "fade-in-up", 150);
+                observeFadeInOnScroll(".clients-item", "scale-in", 100);
             } else if (targetPageName === 'portfolio') {
-                // For portfolio, apply to currently active project items (filtered or all)
-                applyStaggeredFadeInUp(document.querySelectorAll('.project-item.active'), 120); // Slower stagger for projects
+                // For portfolio, ensure all projects are visible and animated by default
+                // This ensures projects appear when navigating to the portfolio page
+                filterFunc("all"); // This will now handle the animation for portfolio items
+            } else if (targetPageName === 'contact') {
+                // Observe contact items for fade-in-left animation on scroll
+                observeFadeInOnScroll(".contact-item", "animate-fade-in-left", 150);
             }
-            // If you uncomment clients, add:
-            // else if (targetPageName === 'clients') {
-            //   applyStaggeredScaleIn(clientItems, 100);
-            // }
         }
     });
 }
@@ -337,10 +401,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Trigger typewriter for the default active page ('about')
     startTypewriterAnimation('typewriter-about');
-    applyStaggeredFadeInUp(serviceItems, 150); // Animate service items on initial load
+
+    // Initialize the portfolio item observer
+    initPortfolioItemObserver(); // IMPORTANT: Initialize the observer on DOMContentLoaded
+
+    // Apply scroll animations to initial visible elements on page load
+    observeFadeInOnScroll(".service-item", "fade-in-up", 150); // Services on About page
+    observeFadeInOnScroll(".testimonials-item", "fade-in-up", 150); // Testimonials on About page
+    observeFadeInOnScroll(".clients-item", "scale-in", 100); // Clients on About page
+    observeFadeInOnScroll(".blog-post-item > a", "fade-in-up", 150); // For blog page items
+    observeFadeInOnScroll(".contact-item", "animate-fade-in-left", 150); // Sidebar contacts
 
     // Ensure skill bars are initially at 0%
     resetSkillBars(); // This will also disconnect any old observer
+
+    // If the initial active page is 'portfolio' on load, trigger the filter function
+    const initialActivePage = document.querySelector('.main-content article.active');
+    if (initialActivePage && initialActivePage.dataset.page === 'portfolio') {
+        filterFunc("all");
+    }
 });
 
 
@@ -351,19 +430,19 @@ if (form) {
 
         const formData = new FormData(form);
         // Add your Web3Forms access key - REPLACE THIS WITH YOUR ACTUAL KEY
-        formData.append("access_key", "YOUR_WEB3FORMS_ACCESS_KEY_HERE"); //
+        formData.append("access_key", "b37cf183-ab50-420b-a202-9aa1780ae15b"); // Using the key from your HTML
 
         console.log('Form submitted (client-side data):', Object.fromEntries(formData));
 
         try {
             const response = await fetch("https://api.web3forms.com/submit", {
-                method: "POST", //
-                body: formData //
+                method: "POST",
+                body: formData
             });
 
-            const result = await response.json(); //
+            const result = await response.json();
 
-            if (result.success) { //
+            if (result.success) {
                 console.log('Web3Forms submission successful:', result);
                 // Show success message
                 showFeedbackMessage("Thank you for your message! I will get back to you soon.", false);
@@ -434,25 +513,51 @@ document.addEventListener('DOMContentLoaded', function() {
         yearElement.textContent = new Date().getFullYear();
     }
 });
-const observeFadeInOnScroll = (selector, animationClass, stagger = 100) => {
+
+// Generic Intersection Observer for scroll-triggered animations
+const observeFadeInOnScroll = (selector, animationClass, stagger = 100, threshold = 0.2) => {
   const elements = document.querySelectorAll(selector);
+  // Ensure elements are initially hidden if they are not already by CSS
+  elements.forEach(el => {
+    // Only apply initial hidden state if it doesn't already have a transform/opacity from base CSS
+    if (!el.style.opacity || el.style.opacity === '1') {
+      el.style.opacity = '0';
+      // Add a base transform if the animation requires it and it's not set
+      if (animationClass === "fade-in-up" || animationClass === "animate-fade-in-left" || animationClass === "animate-fade-in-right" || animationClass === "animate-fade-in-bottom") {
+          // For left/right, start from -50px, for up/bottom, start from translateY(20px)
+          el.style.transform = (animationClass === "animate-fade-in-left" || animationClass === "animate-fade-in-right") ? 'translateX(-50px)' : 'translateY(20px)';
+      } else if (animationClass === "scale-in") {
+          el.style.transform = 'scale(0.8)';
+      }
+    }
+  });
+
   const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach((entry, index) => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
+        // Use a timeout to apply a staggered delay based on the element's position in the original list
+        // This makes the animation appear sequentially for multiple elements
+        const index = Array.from(elements).indexOf(entry.target);
         setTimeout(() => {
           entry.target.classList.add(animationClass);
-        }, index * stagger);
-        obs.unobserve(entry.target);
+          entry.target.style.opacity = '1'; // Ensure opacity is set
+          entry.target.style.transform = ''; // Reset transform to animate to
+        }, index * stagger); // Apply staggered delay
+        obs.unobserve(entry.target); // Stop observing once animated
       }
     });
-  }, { threshold: 0.2 });
+  }, { threshold: threshold }); // Adjust threshold as needed (e.g., 0.1 means 10% visible)
 
   elements.forEach(el => observer.observe(el));
 };
 
-// Apply animations when DOM is fully loaded
+// Apply animations when DOM is fully loaded and navigation links are clicked
 window.addEventListener("DOMContentLoaded", () => {
-  observeFadeInOnScroll(".contact-item", "animate-fade-in-left", 150); // Sidebar bullets
-  observeFadeInOnScroll(".timeline-item", "fade-in-up", 150); // Resume
-  observeFadeInOnScroll(".project-item.active", "animate-fade-in-bottom", 120); // Portfolio
+  // Initial animations for elements on the default 'about' page
+  observeFadeInOnScroll(".service-item", "fade-in-up", 150);
+  observeFadeInOnScroll(".testimonials-item", "fade-in-up", 150);
+  observeFadeInOnScroll(".clients-item", "scale-in", 100);
+  observeFadeInOnScroll(".blog-post-item > a", "fade-in-up", 150); // For blog page items
+  // Note: Sidebar contact items are observed initially as they are always visible (or within scroll range)
+  observeFadeInOnScroll(".contact-item", "animate-fade-in-left", 150);
 });
