@@ -441,7 +441,7 @@ Built a strong academic foundation from Class 1 to 10.
 
           <ul class="project-list">
 
-            <li class="project-item active" data-filter-item data-category="web development">
+            <li class="project-item" data-filter-item data-category="web development">
               <a href="https://dropmint.in/" target="_blank" rel="noopener noreferrer">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
@@ -454,7 +454,7 @@ Built a strong academic foundation from Class 1 to 10.
               </a>
             </li>
 
-            <li class="project-item active" data-filter-item data-category="applications">
+            <li class="project-item" data-filter-item data-category="applications">
               <a href="#" target="_blank" rel="noopener noreferrer">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
@@ -467,7 +467,7 @@ Built a strong academic foundation from Class 1 to 10.
               </a>
             </li>
 
-            <li class="project-item active" data-filter-item data-category="web development">
+            <li class="project-item" data-filter-item data-category="web development">
               <a href="https://pratikkkarn.github.io/Portfolio/" target="_blank" rel="noopener noreferrer">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
@@ -480,7 +480,7 @@ Built a strong academic foundation from Class 1 to 10.
               </a>
             </li>
 
-            <li class="project-item active" data-filter-item data-category="applications">
+            <li class="project-item" data-filter-item data-category="applications">
               <a href="https://github.com/pratikkkarn/FaceRecognition" target="_blank" rel="noopener noreferrer">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
@@ -583,7 +583,16 @@ Built a strong academic foundation from Class 1 to 10.
       text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;">
-     <strong style="font-weight: 800;">©</strong> 2025 <p><strong style="font-weight: 700;">Pratik Kumar</strong>. All rights reserved.</span></p></span>
+     <p style="text-align: center; margin: 0;">
+  <strong>© <span id="year"></span> Pratik Kumar.</strong> All rights reserved.
+</p>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+
+
   </p>
 </footer>
 
