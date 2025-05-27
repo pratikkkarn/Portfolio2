@@ -410,7 +410,8 @@ document.addEventListener("DOMContentLoaded", function() {
     observeFadeInOnScroll(".testimonials-item", "fade-in-up", 150); // Testimonials on About page
     observeFadeInOnScroll(".clients-item", "scale-in", 100); // Clients on About page
     observeFadeInOnScroll(".blog-post-item > a", "fade-in-up", 150); // For blog page items
-    observeFadeInOnScroll(".contact-item", "animate-fade-in-left", 150); // Sidebar contacts
+    // Note: Sidebar contact items are observed initially as they are always visible (or within scroll range)
+    observeFadeInOnScroll(".contact-item", "animate-fade-in-left", 150);
 
     // Ensure skill bars are initially at 0%
     resetSkillBars(); // This will also disconnect any old observer
@@ -560,4 +561,13 @@ window.addEventListener("DOMContentLoaded", () => {
   observeFadeInOnScroll(".blog-post-item > a", "fade-in-up", 150); // For blog page items
   // Note: Sidebar contact items are observed initially as they are always visible (or within scroll range)
   observeFadeInOnScroll(".contact-item", "animate-fade-in-left", 150);
+
+  // Ensure skill bars are initially at 0%
+  resetSkillBars(); // This will also disconnect any old observer
+
+  // If the initial active page is 'portfolio' on load, trigger the filter function
+  const initialActivePage = document.querySelector('.main-content article.active');
+  if (initialActivePage && initialActivePage.dataset.page === 'portfolio') {
+        filterFunc("all");
+    }
 });
