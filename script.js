@@ -570,3 +570,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.classList.add('is-ios');
     }
 });
+
+
+modal.addEventListener("click", function (event) {
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+});
+
