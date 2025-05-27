@@ -21,8 +21,16 @@
   --light-gray: hsl(220, 10%, 70%);
   --light-gray-70: hsla(220, 10%, 70%, 0.7);
   --error-red: hsl(0, 70%, 50%);
-  --bg-floating-gradient: linear-gradient(90deg, hsl(240, 10%, 3%) 0%, hsl(200, 40%, 25%) 20%, hsl(240, 10%, 3%) 40%, hsl(200, 40%, 25%) 60%, hsl(240, 10%, 3%) 80%, hsl(200, 40%, 25%) 100%);
-  --particle-color: hsla(220, 10%, 30%, 0.5);
+  --bg-floating-gradient: linear-gradient(
+  90deg,
+  hsl(250, 20%, 12%) 0%,
+  hsl(260, 30%, 18%) 20%,
+  hsl(240, 40%, 22%) 40%,
+  hsl(255, 45%, 20%) 60%,
+  hsl(235, 30%, 15%) 80%,
+  hsl(250, 20%, 12%) 100%
+);
+
 
   /* Typography */
   --ff-poppins: 'Poppins', sans-serif;
@@ -2009,16 +2017,4 @@ textarea.form-input::-webkit-resizer { display: none; }
   .sidebar.active .info_more-btn ion-icon {
     transform: rotate(180deg);
   }
-}
-
-
-.is-ios {
-  background: var(--eerie-black-2) !important; /* Use !important to override if needed */
-  background-size: auto !important;
-  animation: none !important;
-  background-attachment: scroll !important;
-}
-
-.is-ios::before {
-  display: none !important;
 }
